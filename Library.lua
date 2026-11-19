@@ -16570,5 +16570,29 @@ function Library:Unload()
     getgenv().Library = nil
 end
 
+-- タブアイコン回転（ここに追加）
+task.defer(function()
+    task.wait(1)
+    local TweenService = game:GetService("TweenService")
+    local gui = gethui and gethui() or game:GetService("CoreGui")
+
+    for _, obj in ipairs(gui:GetDescendants()) do
+        if obj:IsA("TextButton") and obj.Parent and obj.Parent.Name == "Tabs" then
+            for _, child in ipairs(obj:GetDescendants()) do
+                if child:IsA("ImageLabel") and child.AbsoluteSize.X > 5 and child.AbsoluteSize.X < 40 then
+                    child.AnchorPoint = Vector2.new(0.5, 0.5)
+                    local tween = TweenService:Create(
+                        child,
+                        TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, false, 0),
+                        { Rotation = 360 }
+                    )
+                    tween:Play()
+                    break
+                end
+            end
+        end
+    end
+end)
+
 getgenv().Library = Library
 return Library
